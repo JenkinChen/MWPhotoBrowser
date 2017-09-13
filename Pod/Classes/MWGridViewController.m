@@ -114,15 +114,25 @@
     self.collectionView.contentInset = UIEdgeInsetsMake(navBar.frame.origin.y + navBar.frame.size.height + [self getGutter], 0, 0, 0);
 }
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self.collectionView reloadData];
-    [self performLayout]; // needed for iOS 5 & 6
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {//转屏前调入
+        [self.collectionView reloadData];
+        [self performLayout];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {//转屏后调入
+        
+    }];
 }
+
+//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//    [self.collectionView reloadData];
+//    [self performLayout]; // needed for iOS 5 & 6
+//}
 
 #pragma mark - Layout
 
 - (CGFloat)getColumns {
-    if ((UIInterfaceOrientationIsPortrait(self.interfaceOrientation))) {
+    if ((UIInterfaceOrientationIsPortrait(DEVICE_ORIENTATION))) {
         return _columns;
     } else {
         return _columnsL;
@@ -130,7 +140,7 @@
 }
 
 - (CGFloat)getMargin {
-    if ((UIInterfaceOrientationIsPortrait(self.interfaceOrientation))) {
+    if ((UIInterfaceOrientationIsPortrait(DEVICE_ORIENTATION))) {
         return _margin;
     } else {
         return _marginL;
@@ -138,7 +148,7 @@
 }
 
 - (CGFloat)getGutter {
-    if ((UIInterfaceOrientationIsPortrait(self.interfaceOrientation))) {
+    if ((UIInterfaceOrientationIsPortrait(DEVICE_ORIENTATION))) {
         return _gutter;
     } else {
         return _gutterL;
